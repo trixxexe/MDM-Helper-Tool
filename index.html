@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MDM Data Helper</title>
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.25);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            --text-color: #1d1d1f;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+        body {
+            background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 99%, #FECFEF 100%); 
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* HEADER CARD */
+        .header-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            padding: 30px;
+            text-align: center;
+        }
+
+        h1 { font-weight: 800; color: var(--text-color); margin-bottom: 5px; font-size: 28px; }
+        .subtitle { font-size: 14px; color: rgba(0,0,0,0.6); font-weight: 500; }
+
+        /* MENU BUTTONS */
+        .menu { display: flex; flex-direction: column; gap: 15px; }
+
+        .glass-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.45);
+            padding: 20px 25px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            color: var(--text-color);
+            font-weight: 600;
+            font-size: 18px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .glass-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            background: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .glass-btn span.arrow { font-size: 20px; opacity: 0.5; }
+
+        /* ABOUT SECTION */
+        .about-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #333;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .about-title { font-weight: 700; margin-bottom: 10px; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+        .about-text { margin-bottom: 20px; opacity: 0.8; }
+
+        .links { display: flex; gap: 15px; }
+        .link-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            color: #333;
+            font-weight: 700;
+            font-size: 13px;
+            background: rgba(255,255,255,0.4);
+            padding: 8px 12px;
+            border-radius: 12px;
+            transition: background 0.2s;
+        }
+        .link-item:hover { background: rgba(255,255,255,0.8); }
+
+        /* Icons */
+        .icon-insta { color: #E1306C; }
+        .icon-git { color: #333; }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <div class="header-card">
+            <h1>MDM Helper</h1>
+            <div class="subtitle">West Bengal Mid-Day Meal Data Tool</div>
+        </div>
+
+        <div class="menu">
+            <a href="form_c.html" class="glass-btn">
+                <span>📄 Form C</span>
+                <span class="arrow">→</span>
+            </a>
+
+            <a href="form_m.html" class="glass-btn">
+                <span>📝 Form M</span>
+                <span class="arrow">→</span>
+            </a>
+
+            <a href="school_data.html" class="glass-btn">
+                <span>🏫 School Monthly Data</span>
+                <span class="arrow">→</span>
+            </a>
+        </div>
+
+        <div class="about-card">
+            <div class="about-title">👨‍💻 About Developer</div>
+            <div class="about-text">
+                This is an MDM Data Entry Helper Tool created by a student of Class 10 in Labpur Jadablal High School of Birbhum District, <strong>Jyotirmoy Ghosh</strong> in 2026.<br><br>
+             
+I firstly made this Tool to reduce the Workload for My Father. But I have decided to deploy this tool for public usage.
+
+   I hope this project helps Teachers all around the state. Thank you.
+            </div>
+            <div class="links">
+                <a href="https://instagram.com/not_your_ritam" target="_blank" class="link-item">
+                    <span class="icon-insta">📸</span> not_your_ritam
+                </a>
+                <a href="https://github.com/trixxexe" target="_blank" class="link-item">
+                    <span class="icon-git">🐙</span> trixxexe
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

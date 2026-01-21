@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Monthly Data</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { 
+            font-family: "Times New Roman", Times, serif; 
+            margin: 0; padding: 0; 
+            background-color: #555; 
+            font-size: 11pt;
+        }
+        
+        .page { 
+            background: white; 
+            width: 210mm; 
+            height: 297mm; 
+            margin: 20px auto; 
+            padding: 10mm; 
+            position: relative; 
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Settings Bar */
+        .settings-bar { background: #222; color: white; padding: 10px; text-align: center; font-family: sans-serif; }
+        .btn { border: none; padding: 5px 15px; cursor: pointer; font-weight: bold; margin-left: 10px; border-radius: 3px; }
+        .btn-clear { background: #d9534f; color: white; }
+        .btn-print { background: white; color: black; }
+
+        /* Inputs */
+        input { border: none; background: rgba(255, 255, 0, 0.05); font-family: inherit; font-size: inherit; width: 100%; height: 100%; padding: 2px 5px; text-align: center; }
+        input:focus { background: rgba(255, 255, 0, 0.2); outline: none; }
+        input.readonly { background-color: #f0f0f0; font-weight: bold; color: #333; }
+        .text-left { text-align: left; }
+
+        /* Main Title */
+        .main-title { text-align: center; font-weight: bold; font-size: 14pt; margin-bottom: 15px; text-decoration: underline; }
+
+        /* General Tables */
+        table { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; }
+        th, td { border: 1px solid #000; padding: 4px; height: 24px; vertical-align: middle; }
+        th { background: #f0f0f0; font-weight: bold; text-align: center; }
+        
+        /* Specific Column Widths for Top Table */
+        .label-col { width: 40%; font-weight: bold; }
+        
+        /* Section Headers */
+        .sec-header { font-weight: bold; margin-top: 5px; margin-bottom: 2px; }
+
+        /* School Expenses Section */
+        .exp-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border: 1px solid transparent; }
+        .exp-group { display: flex; align-items: center; }
+        .exp-label { font-weight: bold; margin-right: 5px; }
+        .exp-input { border-bottom: 1px solid #000; width: 150px; text-align: center; }
+
+        /* Management Table */
+        .mgmt-table td { height: 22px; }
+
+        /* Footer */
+        .footer { margin-top: auto; text-align: right; font-weight: bold; padding-top: 20px; }
+
+        @media print {
+            @page { size: A4 portrait; margin: 0; }
+            body { background: white; margin: 0; }
+            .page { margin: 0; padding: 10mm; border: none; box-shadow: none; height: 297mm; width: 210mm; }
+            .settings-bar { display: none !important; }
+            input { background: transparent !important; }
+            input.readonly { background: transparent !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="settings-bar">
+    <strong>MEMORY MODE ON</strong>
+    <button class="btn btn-clear" onclick="clearData()">🗑️ Clear</button>
+    <button class="btn btn-print" onclick="window.print()">🖨️ Print</button>
+</div>
+
+<div class="page">
+    
+    <div class="main-title">School Monthly Data</div>
+
+    <table>
+        <tbody>
+            <tr>
+                <td class="label-col">For the month of</td>
+                <td colspan="3"><input type="text" id="s_month" class="text-left"></td>
+            </tr>
+            <tr>
+                <td class="label-col">School Code</td>
+                <td><input type="text" id="s_code"></td>
+                <td style="width: 15%; font-weight: bold;">School Name</td>
+                <td><input type="text" id="s_name"></td>
+            </tr>
+            <tr>
+                <td class="label-col">Sansad Name & No</td>
+                <td><input type="text" id="s_sansad"></td>
+                <td style="width: 15%; font-weight: bold;">GP Name</td>
+                <td><input type="text" id="s_gp"></td>
+            </tr>
+            <tr>
+                <td class="label-col">Number of School Days During the Month</td>
+                <td colspan="3"><input type="number" id="s_days_school"></td>
+            </tr>
+            <tr>
+                <td class="label-col">Actual Number of Days Mid-Day-Meal Served</td>
+                <td colspan="3"><input type="number" id="s_days_served"></td>
+            </tr>
+            <tr>
+                <td class="label-col">Total Meals Served of Bal Vatika during the Month</td>
+                <td colspan="3"><input type="number" id="s_meals_bv"></td>
+            </tr>
+            <tr>
+                <td class="label-col">Total Meals Served of Class I to V during the Month</td>
+                <td colspan="3"><input type="number" id="s_meals_iv"></td>
+            </tr>
+            <tr>
+                <td class="label-col">Cook Cum Helper Details</td>
+                <td colspan="3"><input type="text" id="s_helper"></td>
+            </tr>
+            <tr>
+                <td class="label-col">Amount received during the Month</td>
+                <td colspan="3"><input type="number" id="s_amount"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="sec-header">Cooking Cost (In Rs.):</div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">Opening Balance</th>
+                <th>Received During the Month</th>
+                <th>Expenditure During the Month</th>
+                <th>Closing Balance</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="4" style="background: #f9f9f9; font-weight: bold; text-align: left; height: 20px; font-size: 9pt;">Bal Vatika:</td>
+            </tr>
+            <tr>
+                <td><input type="number" id="cc_bv_op" oninput="calcCC()"></td>
+                <td><input type="number" id="cc_bv_rc" oninput="calcCC()"></td>
+                <td><input type="number" id="cc_bv_ex" oninput="calcCC()"></td>
+                <td><input type="number" id="cc_bv_cl" class="readonly" readonly></td>
+            </tr>
+            <tr>
+                <td colspan="4" style="background: #f9f9f9; font-weight: bold; text-align: left; height: 20px; font-size: 9pt;">Class I-V:</td>
+            </tr>
+            <tr>
+                <td><input type="number" id="cc_iv_op" oninput="calcCC()"></td>
+                <td><input type="number" id="cc_iv_rc" oninput="calcCC()"></td>
+                <td><input type="number" id="cc_iv_ex" oninput="calcCC()"></td>
+                <td><input type="number" id="cc_iv_cl" class="readonly" readonly></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="sec-header">Details of Food Grains (In Kilograms): Rice</div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">Opening Balance</th>
+                <th>Received During the Month</th>
+                <th>Expenditure During the Month</th>
+                <th>Closing Balance</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="4" style="background: #f9f9f9; font-weight: bold; text-align: left; height: 20px; font-size: 9pt;">Bal Vatika:</td>
+            </tr>
+            <tr>
+                <td><input type="number" id="ri_bv_op" oninput="calcRice()"></td>
+                <td><input type="number" id="ri_bv_rc" oninput="calcRice()"></td>
+                <td><input type="number" id="ri_bv_ex" oninput="calcRice()"></td>
+                <td><input type="number" id="ri_bv_cl" class="readonly" readonly></td>
+            </tr>
+            <tr>
+                <td colspan="4" style="background: #f9f9f9; font-weight: bold; text-align: left; height: 20px; font-size: 9pt;">Class I-V:</td>
+            </tr>
+            <tr>
+                <td><input type="number" id="ri_iv_op" oninput="calcRice()"></td>
+                <td><input type="number" id="ri_iv_rc" oninput="calcRice()"></td>
+                <td><input type="number" id="ri_iv_ex" oninput="calcRice()"></td>
+                <td><input type="number" id="ri_iv_cl" class="readonly" readonly></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="exp-row">
+        <div class="exp-group">
+            <span class="exp-label">School Expences (In Rs):</span>
+        </div>
+        <div class="exp-group">
+            <span class="exp-label">Total Expenditure</span>
+            <input type="text" id="s_total_exp" class="exp-input">
+        </div>
+        <div class="exp-group">
+            <span class="exp-label">Date of Expenditure</span>
+            <input type="text" id="s_date_exp" class="exp-input">
+        </div>
+    </div>
+
+    <div class="sec-header">Management Monitoring and Evaluation Expenses:</div>
+    <table class="mgmt-table">
+        <tbody>
+            <tr>
+                <td class="label-col" style="border-right: none;">School Inspection:</td>
+                <td style="width: 10%; text-align: right; border-left: none; font-weight: bold;">Yes:</td>
+                <td style="width: 10%;"><input type="text" id="insp_yes"></td>
+                <td style="width: 10%; text-align: right; border-left: none; font-weight: bold;">No:</td>
+                <td style="width: 10%;"><input type="text" id="insp_no"></td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <table class="mgmt-table" style="width: 70%;"> <thead>
+            <tr>
+                <th style="width: 60%; text-align: left; padding-left: 10px;">Name</th>
+                <th>In Numbers</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="padding-left: 10px;">Bu Members of Task Force</td>
+                <td><input type="number" id="mm_task"></td>
+            </tr>
+            <tr>
+                <td style="padding-left: 10px;">By district Official</td>
+                <td><input type="number" id="mm_dist"></td>
+            </tr>
+            <tr>
+                <td style="padding-left: 10px;">By Bloc/Taluk Level Official</td>
+                <td><input type="number" id="mm_block"></td>
+            </tr>
+            <tr>
+                <td style="padding-left: 10px;">By SMC Members</td>
+                <td><input type="number" id="mm_smc"></td>
+            </tr>
+            <tr>
+                <td style="padding-left: 10px;">Untoward Incidents (if any)</td>
+                <td><input type="text" id="mm_incident_txt"></td>
+            </tr>
+            <tr>
+                <td style="padding-left: 10px;">Number of Incident Occurred</td>
+                <td><input type="number" id="mm_incident_num"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="footer">
+        Signature fo Headmaster / Headmistress
+    </div>
+
+</div>
+
+<script>
+    window.onload = function() { loadData(); };
+
+    // --- CALCULATIONS ---
+    function calcCC() {
+        // Closing = Opening + Received - Expenditure
+        ['bv', 'iv'].forEach(grp => {
+            let op = parseFloat(document.getElementById(`cc_${grp}_op`).value) || 0;
+            let rc = parseFloat(document.getElementById(`cc_${grp}_rc`).value) || 0;
+            let ex = parseFloat(document.getElementById(`cc_${grp}_ex`).value) || 0;
+            document.getElementById(`cc_${grp}_cl`).value = (op + rc - ex).toFixed(2);
+        });
+        saveData();
+    }
+
+    function calcRice() {
+        ['bv', 'iv'].forEach(grp => {
+            let op = parseFloat(document.getElementById(`ri_${grp}_op`).value) || 0;
+            let rc = parseFloat(document.getElementById(`ri_${grp}_rc`).value) || 0;
+            let ex = parseFloat(document.getElementById(`ri_${grp}_ex`).value) || 0;
+            document.getElementById(`ri_${grp}_cl`).value = (op + rc - ex).toFixed(2);
+        });
+        saveData();
+    }
+
+    // --- MEMORY ---
+    function saveData() {
+        let data = {};
+        document.querySelectorAll('input').forEach(i => { if(i.id) data[i.id] = i.value; });
+        localStorage.setItem('school_monthly_data', JSON.stringify(data));
+    }
+
+    function loadData() {
+        let d = JSON.parse(localStorage.getItem('school_monthly_data'));
+        if(d) {
+            for(let k in d) if(document.getElementById(k)) document.getElementById(k).value = d[k];
+            calcCC(); calcRice();
+        }
+    }
+
+    function clearData() {
+        if(confirm("Clear all data?")) { localStorage.removeItem('school_monthly_data'); location.reload(); }
+    }
+</script>
+
+</body>
+</html>
