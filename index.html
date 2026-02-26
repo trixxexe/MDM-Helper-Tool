@@ -6,53 +6,83 @@
     <title>MDM Data Helper</title>
     <style>
         :root {
-            --glass-bg: rgba(255, 255, 255, 0.25);
-            --glass-border: rgba(255, 255, 255, 0.5);
-            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.3);
+            --glass-highlight: rgba(255, 255, 255, 0.5);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
             --text-color: #1d1d1f;
+            --accent-color: #ff4b1f;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
 
         body {
-            background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 99%, #FECFEF 100%); 
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+            background: #f0f2f5;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            overflow: hidden; /* Keeps blobs from creating scrollbars */
+            position: relative;
         }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        /* --- LIQUID BACKGROUND BLOBS --- */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.8;
+            z-index: 0;
+            animation: float 10s infinite alternate ease-in-out;
         }
 
+        .blob-1 { top: -10%; left: -10%; width: 300px; height: 300px; background: #ff9a9e; animation-delay: 0s; }
+        .blob-2 { bottom: -10%; right: -10%; width: 350px; height: 350px; background: #a1c4fd; animation-delay: -2s; }
+        .blob-3 { top: 40%; left: 40%; width: 200px; height: 200px; background: #c2e9fb; animation-delay: -5s; transform: translate(-50%, -50%); }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(20px, 40px) scale(1.1); }
+        }
+
+        /* --- MAIN CONTAINER --- */
         .container {
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
             display: flex;
             flex-direction: column;
             gap: 20px;
+            position: relative;
+            z-index: 10; /* Keeps content above blobs */
+            animation: slideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        /* HEADER CARD */
-        .header-card {
+        /* --- GLASS CARD STYLE --- */
+        .glass-card {
             background: var(--glass-bg);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
             border-radius: 24px;
             border: 1px solid var(--glass-border);
+            border-top: 1px solid var(--glass-highlight); /* Top highlight for 3D effect */
             box-shadow: var(--glass-shadow);
             padding: 30px;
             text-align: center;
+            transition: transform 0.3s ease;
         }
 
-        h1 { font-weight: 800; color: var(--text-color); margin-bottom: 5px; font-size: 28px; }
-        .subtitle { font-size: 14px; color: rgba(0,0,0,0.6); font-weight: 500; }
+        /* HEADER */
+        .header-card h1 { 
+            font-weight: 800; 
+            background: linear-gradient(45deg, #1d1d1f, #4a4a4a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px; 
+            font-size: 32px; 
+            letter-spacing: -1px;
+        }
+        .subtitle { font-size: 14px; color: rgba(0,0,0,0.6); font-weight: 500; letter-spacing: 0.5px; }
 
         /* MENU BUTTONS */
         .menu { display: flex; flex-direction: column; gap: 15px; }
@@ -62,67 +92,108 @@
             align-items: center;
             justify-content: space-between;
             text-decoration: none;
-            background: rgba(255, 255, 255, 0.45);
-            padding: 20px 25px;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+            padding: 22px 25px;
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.6);
             color: var(--text-color);
-            font-weight: 600;
+            font-weight: 700;
             font-size: 18px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transform: translateX(-100%);
+            transition: 0.5s;
         }
 
         .glass-btn:hover {
-            transform: translateY(-3px) scale(1.02);
-            background: rgba(255, 255, 255, 0.7);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.65);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            border-color: #fff;
         }
 
-        .glass-btn span.arrow { font-size: 20px; opacity: 0.5; }
+        .glass-btn:hover::before { transform: translateX(100%); }
+
+        .glass-btn:active { transform: scale(0.98); }
+
+        .glass-btn span.arrow { 
+            font-size: 20px; 
+            background: #fff;
+            width: 32px; height: 32px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%;
+            color: #1d1d1f;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
 
         /* ABOUT SECTION */
         .about-card {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
+            text-align: left;
             padding: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: #333;
             font-size: 14px;
             line-height: 1.6;
+            color: #333;
         }
 
-        .about-title { font-weight: 700; margin-bottom: 10px; font-size: 16px; display: flex; align-items: center; gap: 8px; }
-        .about-text { margin-bottom: 20px; opacity: 0.8; }
+        .about-title { 
+            font-weight: 800; 
+            margin-bottom: 12px; 
+            font-size: 15px; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px;
+            text-transform: uppercase;
+            opacity: 0.7;
+            letter-spacing: 1px;
+        }
+        
+        .about-text { margin-bottom: 20px; opacity: 0.85; }
+        .about-text strong { color: #000; font-weight: 700; }
 
-        .links { display: flex; gap: 15px; }
+        .links { display: flex; gap: 12px; flex-wrap: wrap; }
         .link-item {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             text-decoration: none;
             color: #333;
-            font-weight: 700;
+            font-weight: 600;
             font-size: 13px;
-            background: rgba(255,255,255,0.4);
-            padding: 8px 12px;
-            border-radius: 12px;
-            transition: background 0.2s;
+            background: rgba(255,255,255,0.5);
+            padding: 10px 16px;
+            border-radius: 50px; /* Pill shape */
+            border: 1px solid rgba(255,255,255,0.5);
+            transition: all 0.2s;
         }
-        .link-item:hover { background: rgba(255,255,255,0.8); }
+        .link-item:hover { background: #fff; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
-        /* Icons */
-        .icon-insta { color: #E1306C; }
-        .icon-git { color: #333; }
+        /* ANIMATIONS */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
     </style>
 </head>
 <body>
 
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
     <div class="container">
         
-        <div class="header-card">
+        <div class="glass-card header-card">
             <h1>MDM Helper</h1>
             <div class="subtitle">West Bengal Mid-Day Meal Data Tool</div>
         </div>
@@ -144,21 +215,21 @@
             </a>
         </div>
 
-        <div class="about-card">
-            <div class="about-title">👨‍💻 About Developer</div>
+        <div class="glass-card about-card">
+            <div class="about-title">👨‍💻 Developer Profile</div>
             <div class="about-text">
-                This is an MDM Data Entry Helper Tool created by <strong> Jyotirmoy Ghosh</strong>, a student of Class X at Labpur Jadablal High School of Birbhum District, in 2026.<br><br>
-             
-I initially developed this Tool to reduce the Workload of My Father.My Father wanted a tool like this to exist for quite some time. I am, in fact, very happy to say that I have accomplished the task of making this tool. However, I have now decided to deploy this tool for public usage.<br><br>
+                This is an MDM Data Entry Helper Tool created by <strong>Jyotirmoy Ghosh</strong>, a student of Class X at Labpur Jadablal High School of Birbhum District, in 2026.<br><br>
+                
+                I initially developed this Tool to reduce the Workload for my Father. I am happy to say that I have accomplished this task. I have now decided to deploy this tool for public usage.<br><br>
 
-   I hope this project helps Teachers accross the state. <strong>Thank you.</strong>
+                I hope this project helps Teachers across the state. <strong>Thank you.</strong>
             </div>
             <div class="links">
                 <a href="https://instagram.com/not_your_ritam" target="_blank" class="link-item">
-                    <span class="icon-insta">📸</span> not_your_ritam
+                    <span>📸</span> not_your_ritam
                 </a>
                 <a href="https://github.com/trixxexe" target="_blank" class="link-item">
-                    <span class="icon-git">🐙</span> trixxexe
+                    <span>🐙</span> trixxexe
                 </a>
             </div>
         </div>
