@@ -61,9 +61,6 @@
         /* Error State (Red Warning) */
         .error-bg { background-color: #ffcccc !important; color: red !important; font-weight: bold; }
 
-        /* Date Arrow Remover */
-        input[type="date"]::-webkit-calendar-picker-indicator { display: none !important; }
-
         /* Header */
         .header { display: flex; align-items: flex-start; margin-bottom: 5px; position: relative; z-index: 1; }
         .logo { width: 50px; height: 50px; border: 1px solid #eee; text-align: center; display: flex; align-items: center; justify-content: center; } 
@@ -211,7 +208,8 @@
     // --- TABLE GENERATION ---
     for (let i = 1; i <= rowCount; i++) {
         let tr = document.createElement('tr');
-        tr.innerHTML = `<td>${i}</td><td><input type="date" id="date_${i}" style="font-size:7pt;"></td>
+        // DATE FORMAT FIX: Changed type="date" to type="text" with placeholder
+        tr.innerHTML = `<td>${i}</td><td><input type="text" id="date_${i}" placeholder="dd/mm" style="font-size:8pt;"></td>
             <td><input type="number" id="r${i}_g0_cp" class="val-in" oninput="calc(${i})"></td><td><input type="number" id="r${i}_g0_mt" class="val-in" oninput="calc(${i})"></td>
             <td><input type="number" id="r${i}_g1_cp" class="val-in" oninput="calc(${i})"></td><td><input type="number" id="r${i}_g1_mt" class="val-in" oninput="calc(${i})"></td>
             <td><input type="number" id="r${i}_g2_cp" class="val-in" oninput="calc(${i})"></td><td><input type="number" id="r${i}_g2_mt" class="val-in" oninput="calc(${i})"></td>
