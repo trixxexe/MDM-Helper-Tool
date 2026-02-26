@@ -18,7 +18,7 @@
             width: 210mm; 
             height: 297mm; /* Fixed A4 Height */
             margin: 20px auto; 
-            padding: 8mm; /* Tight margins */
+            padding: 8mm; 
             position: relative; 
             box-shadow: 0 0 10px rgba(0,0,0,0.5);
             overflow: hidden; 
@@ -58,22 +58,11 @@
         input.readonly { background-color: #f0f0f0; font-weight: bold; color: #333; }
         input.footer-auto { background-color: #e8f0fe; font-weight: bold; }
 
-        /* --- DATE ARROW REMOVER (GLOBAL) --- */
-        input[type="date"] {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-        }
-        /* Hides the arrow in Chrome/Android */
-        input[type="date"]::-webkit-calendar-picker-indicator {
-            display: none !important;
-            -webkit-appearance: none !important;
-            background: transparent;
-        }
-        /* Ensures text stays centered */
-        input[type="date"]::-webkit-date-and-time-value {
-            text-align: center; 
-        }
+        /* Error State (Red Warning) */
+        .error-bg { background-color: #ffcccc !important; color: red !important; font-weight: bold; }
+
+        /* Date Arrow Remover */
+        input[type="date"]::-webkit-calendar-picker-indicator { display: none !important; }
 
         /* Header */
         .header { display: flex; align-items: flex-start; margin-bottom: 5px; position: relative; z-index: 1; }
@@ -86,12 +75,12 @@
         .form-box { border: 2px solid #000; padding: 2px 5px; font-weight: bold; margin-left: 5px; white-space: nowrap; font-size: 9pt; height: fit-content; }
         .sub-header { text-align: center; font-weight: bold; margin: 2px 0; font-size: 8pt; }
 
-        /* Info Fields */
+        /* Fields */
         .field-row { display: flex; margin-bottom: 2px; align-items: baseline; position: relative; z-index: 1; }
         .field-label { white-space: nowrap; margin-right: 5px; }
         .field-input { flex: 1; }
 
-        /* Enrollment Section */
+        /* Enrollment */
         .enrollment-section { margin: 2px 0; position: relative; z-index: 1; font-size: 8pt; }
         .enroll-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1px; }
         .box-group { display: inline-flex; gap: 0; }
@@ -99,13 +88,13 @@
         .split-row { display: flex; justify-content: space-between; margin-bottom: 1px; }
         .half-row { display: flex; justify-content: space-between; align-items: center; width: 49%; }
 
-        /* Main Table */
+        /* Table */
         table { width: 100%; border-collapse: collapse; font-size: 7.5pt; position: relative; z-index: 1; margin-bottom: 2px; }
         th, td { border: 1px solid #000; padding: 0; text-align: center; height: 15px; overflow: hidden; }
         th { font-weight: bold; line-height: 1; background-color: #fff; vertical-align: middle; height: auto; padding: 2px 0;}
         .col-sl { width: 18px; } .col-date { width: 45px; } .col-total { background-color: #f5f5f5; }
 
-        /* Footer Section */
+        /* Footer */
         .footer { font-size: 8pt; margin-top: auto; line-height: 1.2; position: relative; z-index: 1; }
         .sig-block { margin-top: 15px; display: flex; justify-content: flex-end; }
         .sig-line { border-top: 1px solid #000; width: 180px; text-align: center; padding-top: 2px; }
@@ -117,9 +106,9 @@
             .settings-bar { display: none !important; }
             input { background: transparent !important; }
             input.readonly, input.footer-auto { background-color: transparent !important; font-weight: bold; }
-            .watermark { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .dev-watermark { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .watermark, .dev-watermark { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             table, tr, td, .footer { page-break-inside: avoid; }
+            .error-bg { background-color: transparent !important; color: black !important; }
         }
     </style>
 </head>
@@ -199,6 +188,13 @@
         createBoxes('enr_iiivii', 4, 'eniiivii');
         createBoxes('enr_ivviii', 4, 'enivviii');
         createBoxes('enr_v', 4, 'env');
+        
+        // --- UNIVERSAL MEMORY ACTIVATOR ---
+        // This finds EVERY input on the page and adds the save function
+        document.querySelectorAll('input').forEach(el => {
+            el.addEventListener('input', saveData);
+        });
+
         loadData(); 
     };
 
@@ -207,7 +203,7 @@
         for(let i=1; i<=n; i++) {
             let d = document.createElement('div');
             d.className = 'num-box';
-            d.innerHTML = `<input id="${prefix}_${i}" maxlength="1" oninput="saveData()">`;
+            d.innerHTML = `<input id="${prefix}_${i}" maxlength="1">`; // Listener added globally later
             c.appendChild(d);
         }
     }
@@ -215,19 +211,19 @@
     // --- TABLE GENERATION ---
     for (let i = 1; i <= rowCount; i++) {
         let tr = document.createElement('tr');
-        tr.innerHTML = `<td>${i}</td><td><input type="date" id="date_${i}" style="font-size:7pt;" oninput="saveData()"></td>
-            <td><input type="number" id="r${i}_g0_cp" class="val-in" data-r="${i}" data-g="0" data-t="cp" oninput="calc(${i})"></td><td><input type="number" id="r${i}_g0_mt" class="val-in" data-r="${i}" data-g="0" data-t="mt" oninput="calc(${i})"></td>
-            <td><input type="number" id="r${i}_g1_cp" class="val-in" data-r="${i}" data-g="1" data-t="cp" oninput="calc(${i})"></td><td><input type="number" id="r${i}_g1_mt" class="val-in" data-r="${i}" data-g="1" data-t="mt" oninput="calc(${i})"></td>
-            <td><input type="number" id="r${i}_g2_cp" class="val-in" data-r="${i}" data-g="2" data-t="cp" oninput="calc(${i})"></td><td><input type="number" id="r${i}_g2_mt" class="val-in" data-r="${i}" data-g="2" data-t="mt" oninput="calc(${i})"></td>
-            <td><input type="number" id="r${i}_g3_cp" class="val-in" data-r="${i}" data-g="3" data-t="cp" oninput="calc(${i})"></td><td><input type="number" id="r${i}_g3_mt" class="val-in" data-r="${i}" data-g="3" data-t="mt" oninput="calc(${i})"></td>
-            <td><input type="number" id="r${i}_g4_cp" class="val-in" data-r="${i}" data-g="4" data-t="cp" oninput="calc(${i})"></td><td><input type="number" id="r${i}_g4_mt" class="val-in" data-r="${i}" data-g="4" data-t="mt" oninput="calc(${i})"></td>
+        tr.innerHTML = `<td>${i}</td><td><input type="date" id="date_${i}" style="font-size:7pt;"></td>
+            <td><input type="number" id="r${i}_g0_cp" class="val-in" oninput="calc(${i})"></td><td><input type="number" id="r${i}_g0_mt" class="val-in" oninput="calc(${i})"></td>
+            <td><input type="number" id="r${i}_g1_cp" class="val-in" oninput="calc(${i})"></td><td><input type="number" id="r${i}_g1_mt" class="val-in" oninput="calc(${i})"></td>
+            <td><input type="number" id="r${i}_g2_cp" class="val-in" oninput="calc(${i})"></td><td><input type="number" id="r${i}_g2_mt" class="val-in" oninput="calc(${i})"></td>
+            <td><input type="number" id="r${i}_g3_cp" class="val-in" oninput="calc(${i})"></td><td><input type="number" id="r${i}_g3_mt" class="val-in" oninput="calc(${i})"></td>
+            <td><input type="number" id="r${i}_g4_cp" class="val-in" oninput="calc(${i})"></td><td><input type="number" id="r${i}_g4_mt" class="val-in" oninput="calc(${i})"></td>
             <td class="col-total"><input id="r${i}_tot_cp" class="readonly" readonly></td><td class="col-total"><input id="r${i}_tot_mt" class="readonly" readonly></td>
             <td><input id="r${i}_rice" class="readonly" tabindex="-1"></td><td><input id="r${i}_cost" class="readonly" tabindex="-1"></td>
-            <td><input type="text" id="menu_${i}" oninput="saveData()"></td>`;
+            <td><input type="text" id="menu_${i}"></td>`;
         tbody.appendChild(tr);
     }
 
-    // --- MATH ---
+    // --- MATH & LOGIC ---
     function recalculateAll() { 
         saveData();
         for(let i=1; i<=rowCount; i++) calc(i, false); 
@@ -237,8 +233,21 @@
     function calc(rowIdx, shouldSave = true) {
         let rowCP = 0, rowMT = 0;
         for(let g=0; g<5; g++) {
-            rowCP += parseFloat(document.getElementById(`r${rowIdx}_g${g}_cp`).value) || 0;
-            rowMT += parseFloat(document.getElementById(`r${rowIdx}_g${g}_mt`).value) || 0;
+            let cpInput = document.getElementById(`r${rowIdx}_g${g}_cp`);
+            let mtInput = document.getElementById(`r${rowIdx}_g${g}_mt`);
+            
+            let cpVal = parseFloat(cpInput.value) || 0;
+            let mtVal = parseFloat(mtInput.value) || 0;
+
+            // --- RED WARNING (If MT > CP) ---
+            if(mtVal > cpVal) {
+                mtInput.classList.add('error-bg');
+            } else {
+                mtInput.classList.remove('error-bg');
+            }
+
+            rowCP += cpVal;
+            rowMT += mtVal;
         }
         document.getElementById(`r${rowIdx}_tot_cp`).value = rowCP || '';
         document.getElementById(`r${rowIdx}_tot_mt`).value = rowMT || '';
@@ -288,8 +297,12 @@
     function loadData() {
         let d = JSON.parse(localStorage.getItem('mdm_form_c_final'));
         if(d) {
-            for(let k in d) if(document.getElementById(k)) document.getElementById(k).value = d[k];
-            recalculateAll();
+            for(let k in d) if(document.getElementById(k)) {
+                 document.getElementById(k).value = d[k];
+            }
+            // Recalculate to trigger red warnings and totals on load
+            for(let i=1; i<=rowCount; i++) calc(i, false);
+            updateGrandTotals();
         }
     }
     function clearData() {
