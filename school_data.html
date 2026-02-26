@@ -262,7 +262,14 @@
 </div>
 
 <script>
-    window.onload = function() { loadData(); };
+    // --- UNIVERSAL MEMORY ACTIVATOR ---
+    // This connects every single input box to the save system immediately
+    window.onload = function() {
+        document.querySelectorAll('input').forEach(el => {
+            el.addEventListener('input', saveData);
+        });
+        loadData(); 
+    };
 
     // --- CALCULATIONS ---
     function calcCC() {
