@@ -208,8 +208,8 @@
     // --- TABLE GENERATION ---
     for (let i = 1; i <= rowCount; i++) {
         let tr = document.createElement('tr');
-        // DATE FORMAT FIX: Changed type="date" to type="text" with placeholder
-        tr.innerHTML = `<td>${i}</td><td><input type="text" id="date_${i}" placeholder="dd/mm" style="font-size:8pt;"></td>
+        // DATE FIX: Using placeholder="DD/MM/YYYY" and slightly smaller font to fit
+        tr.innerHTML = `<td>${i}</td><td><input type="text" id="date_${i}" placeholder="DD/MM/YYYY" style="font-size:7pt;"></td>
             <td><input type="number" id="r${i}_g0_cp" class="val-in" oninput="calc(${i})"></td><td><input type="number" id="r${i}_g0_mt" class="val-in" oninput="calc(${i})"></td>
             <td><input type="number" id="r${i}_g1_cp" class="val-in" oninput="calc(${i})"></td><td><input type="number" id="r${i}_g1_mt" class="val-in" oninput="calc(${i})"></td>
             <td><input type="number" id="r${i}_g2_cp" class="val-in" oninput="calc(${i})"></td><td><input type="number" id="r${i}_g2_mt" class="val-in" oninput="calc(${i})"></td>
