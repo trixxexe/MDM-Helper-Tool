@@ -31,17 +31,17 @@
         .settings-btn { background: #d9534f; color: white; border: none; padding: 5px 15px; cursor: pointer; font-weight: bold; margin-left: 10px; border-radius: 3px; }
         .print-btn { background: white; color: black; border: none; padding: 5px 15px; cursor: pointer; font-weight: bold; margin-left: 10px; border-radius: 3px; }
 
-        /* Main Watermark (Background) */
+        /* Main Watermark */
         .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.08; pointer-events: none; width: 70%; z-index: 0; }
 
-        /* DEVELOPER WATERMARK (Safe Zone) */
+        /* DEVELOPER WATERMARK */
         .dev-watermark {
             text-align: right;
             font-family: 'Courier New', monospace;
             font-size: 10pt;
             font-weight: bold;
             color: #000;
-            margin-top: 20px; /* 2cm space (approx) below signatures */
+            margin-top: 20px; 
             margin-right: 5px;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -76,7 +76,7 @@
         .box-cell { width: 20px; border-right: 1px solid #000; }
         .box-cell:last-child { border-right: none; }
 
-        /* Spread Row (Prevents Overlap) */
+        /* Spread Row */
         .spread-row {
             display: flex;
             justify-content: space-between;
@@ -218,6 +218,12 @@
     window.onload = function() {
         createBoxes('dise_container', 11, 'dise');
         createBoxes('acc_container', 16, 'acc');
+        
+        // --- UNIVERSAL MEMORY ACTIVATOR ---
+        document.querySelectorAll('input').forEach(el => {
+            el.addEventListener('input', saveData);
+        });
+        
         loadData();
     };
 
@@ -227,7 +233,7 @@
             let d = document.createElement('div');
             d.className = 'box-cell';
             if(prefix === 'acc') d.style.width = "100%";
-            d.innerHTML = `<input id="${prefix}_${i}" maxlength="1" oninput="saveData()">`;
+            d.innerHTML = `<input id="${prefix}_${i}" maxlength="1">`;
             c.appendChild(d);
         }
     }
